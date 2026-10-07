@@ -1,0 +1,6 @@
+2026-10-07T02:37:50.949Z HYPERVISOR: Release 0.2.25-amd64/Linux (tag 2023010200)
+2026-10-07T02:37:50.949Z HYPERVISOR: Started on IP = 127.0.0.1, TCP port = 60185.
+2026-10-07T02:37:50.957Z HYPERVISOR: exec_cmd: hypervisor version 
+2026-10-07T02:37:50.958Z HYPERVISOR: exec_cmd: hypervisor working_dir /home/josejim74/Documents/ITIEL-Laboratorio#2/Laboratorio#1/project-files/dynamips 
+2026-10-07T02:37:50.958Z GENERAL: working_dir=/home/josejim74/Documents/ITIEL-Laboratorio#2/Laboratorio#1/project-files/dynamips
+2026-10-07T02:37:50.958Z HYPERVISOR: exec_cmd: nio_bridge create Hub1 
