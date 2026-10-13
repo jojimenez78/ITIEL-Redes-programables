@@ -1,0 +1,1 @@
+Formatting '/home/josejim74/Documents/ITIEL-Laboratorio#2/Laboratorio#1/project-files/qemu/ce588fdb-fbe7-46f5-b2ee-46be3e15fc6b/hda_disk.qcow2', fmt=qcow2 cluster_size=65536 extended_l2=off compression_type=zlib size=134217728 backing_file=/home/josejim74/GNS3/images/QEMU/chr-7.22.1.img backing_fmt=raw lazy_refcounts=off refcount_bits=16

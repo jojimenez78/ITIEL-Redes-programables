@@ -1,15 +1,15 @@
 # Inventario de equipos para Laboratorio 1
-# Reemplazar 'estudiante' con su número de lista para evitar conflictos
+# numero_lista: N  # REEMPLAZAR N CON SU NÚMERO DE LISTA
 # Las contraseñas NO se almacenan aquí - se leen de variables de entorno LAB_PASS_<NOMBRE>
-# o se solicitan mediante getpass() si las variables no existen
+# o se solicitan mediante getpass() si las variables no existe
 
-- name: mikrotik-estudiante  # CAMBIAR 'estudiante' por su número de lista
+- nombre: mt-lab
   host: 10.60.30.202
   device_type: mikrotik_routeros
-  usuario: lab-ssh  # Usuario proporcionado en clase
+  usuario: lab-ssh
   rol: escritura
 
-- name: cisco-estudiante  # OPCIONAL: para extra multivendor (Cisco IOS)
+- nombre: cisco-lab
   host: 10.60.30.203
   device_type: cisco_ios
   usuario: lab-ssh

@@ -13,7 +13,6 @@ __pycache__/
 *.pyo
 *.pyd
 *.cover
-*.log
 *.swp
 .DS_Store
 build/
@@ -21,12 +20,6 @@ dist/
 *.egg-info/
 *.manifest
 *.spec
-
-# Logs de Netmiko (contienen información sensible)
-logs/
-
-# Archivos de reporte
-reporte_estado.json
 
 # IDE
 .vscode/

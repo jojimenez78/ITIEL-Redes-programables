@@ -345,11 +345,6 @@
                             "type": "ethernet"
                         },
                         {
-                            "name": "gns3tap0",
-                            "special": true,
-                            "type": "ethernet"
-                        },
-                        {
                             "name": "lo",
                             "special": true,
                             "type": "ethernet"

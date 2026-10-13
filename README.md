@@ -55,7 +55,7 @@ python lab1_inventario.py --limpiar
   Ejemplo: para `mikrotik-estudiante` usar `LAB_PASS_MIKROTIK-ESTUDIANTE`
 
 ### Declaración de uso de IA
-Se utilizó el asistente de OpenCode para ayudar en la creación inicial de la estructura del proyecto y archivos de configuración. El desarrollo principal del script `lab1_inventario.py` será realizado manualmente siguiendo los requisitos del laboratorio.
+Se utilizó OpenCode con el modelo Nemotron 3 Super (NVIDIA) como apoyo para generar el esqueleto del script y que revisé el código yo mismo.
 
 ### Notas importantes
 - Nunca almacenar contraseñas en el código, inventario.yaml o repositorio

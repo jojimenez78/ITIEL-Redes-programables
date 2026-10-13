@@ -1,0 +1,259 @@
+Laboratorio 1: Inventario, Estado y Configuración
+Segura con Python + SSH (Netmiko)
+Curso: ITIEL-13 - REDES PROGRAMABLES (Grupo 01)
+Profesor: RANDALL ZAMORA ROJAS
+Periodo: III - 2026
+
+ Dato            Valor
+
+ Valor           7.5 % de la nota final
+
+ Modalidad       Individual
+
+ Asignación      Semana 4 (5-10 Oct) — se inicia en clase
+
+ Entrega         Semana 6 (19-24 Oct), antes del inicio de la clase, por Campus Virtual
+
+ Defensa         Semana 6, revisión oral breve (5 min) en el bloque práctico
+
+
+
+1. Propósito
+
+Integrar lo trabajado en las Semanas 1 a 3 (Linux, venv, SSH, Netmiko, consultar antes de
+configurar) en un solo script que:
+
+   1. Lea un inventario en YAML con varios equipos del laboratorio GNS3.
+   2. Se conecte por SSH con Netmiko a cada uno y recolecte su estado como datos
+      estructurados (JSON).
+   3. Aplique en el MikroTik un cambio de configuración sin duplicar nada: correr el script dos
+      veces deja el equipo igual.
+
+Es la versión "a mano" de lo que Ansible hará desde la Semana 5, y la base de las herramientas
+que usará el agente de IA de los proyectos.
+
+
+
+2. Escenario (laboratorio GNS3, acceso por Tailscale)
+
+   Su equipo Linux (fuera de GNS3)          Laboratorio GNS3 (red 10.60.30.0/24, gw .1)
+   Python + venv + Git + Netmiko
+   lab1_inventario.py                                 [ LAN-10.60.30 ]
+           ||                                                |
+           ++============== Tailscale =================> [ SW1 ]
+                                                          /      \
+                                     MikroTik RouterOS v7         Cisco IOS 3725
+                                     10.60.30.202 (ether1)        10.60.30.203 (Fa0/0)
+Topología en GNS3: la nube "Internet" (red 10.60.30.0/24) conecta por SW1 al MikroTik y al Cisco.
+PC1 (detrás del Cisco) y PC2 (detrás del MikroTik) son VPCS para pruebas de conectividad.
+
+ Equipo                        Rol                      Driver Netmiko      Permiso           Datos de
+                                                                                              acceso
+
+ Su equipo Linux (laptop, VM   Donde se instala el      —                   —                 Propio
+ o WSL2), fuera de la          venv y corre el script
+ topología
+
+ MikroTik RouterOS v7          Equipo a administrar     mikrotik_routeros   Lectura y         Usuario lab-
+ (10.60.30.202)                                                             escritura (solo   ssh (clave en
+                                                                            sus objetos)      clase)
+
+ Cisco IOS 3725                Equipo a administrar     cisco_ios           Solo lectura      Usuario lab-
+ (10.60.30.203)                (extra multivendor)                                            ssh (clave en
+                                                                                              clase)
+
+
+Los equipos del GNS3 son compartidos. Todo lo que usted cree lleva su número de lista N, para
+no pisar el trabajo de otros.
+3. Requerimientos
+
+R1. Inventario externo (YAML)
+
+    • Los equipos se definen en inventario.yaml (base: laboratorio_1/inventario_ejemplo.yaml),
+      nunca dentro del código.
+    • Campos mínimos por equipo: nombre, host, device_type, usuario, rol (lectura o escritura).
+    • Los equipos de la topología: el MikroTik (obligatorio) y el Cisco (si hace el extra multivendor).
+
+R2. Credenciales seguras
+
+    • Ninguna contraseña en el código, en el YAML ni en el repositorio.
+    • Se leen de variables de entorno LAB_PASS_<NOMBRE> (nombre en mayúsculas, guiones como _:
+      mt-lab → LAB_PASS_MT_LAB) y, si no existen, se piden con getpass.
+
+
+R3. Conexión robusta
+
+    • ConnectHandler dentro de un bloque with.
+    • NetmikoTimeoutException, NetmikoAuthenticationException y Exception manejadas por equipo:
+      si un equipo falla, se registra el error y el script continúa con los demás.
+    • session_log por equipo en la carpeta logs/.
+
+R4. Estado estructurado
+
+Para cada equipo, obtener y convertir a diccionario (no guardar texto crudo):
+
+ Dato                RouterOS (ejemplo)                           Cisco IOS (extra, ejemplo)
+
+ Nombre del          /system identity print                       show running-config \| include
+ equipo                                                           hostname
+
+ Tiempo              /system resource print                       show version \| include uptime
+ encendido
+
+ Interfaces con su   /ip address print terse                      show ip interface brief
+ IP
+
+ Ruta por defecto    /ip route print terse where dst-             show ip route 0.0.0.0
+                     address=0.0.0.0/0
+
+
+    • Los comandos van en un diccionario por device_type, no repetidos con if por equipo (así
+      agregar otro fabricante es agregar una entrada).
+    • El análisis del texto puede hacerse con split(), re o TextFSM.
+
+R5. Reporte
+
+    • reporte_estado.json: lista de equipos con sus datos, fecha/hora y estado (ok o el mensaje de
+      error).
+    • Resumen en consola como tabla: equipo, IP, estado, cantidad de interfaces, gateway por
+      defecto.
+R6. Cambio de configuración sin duplicados en el MikroTik (solo equipos con
+rol: escritura)
+
+    • Asegurar la interfaz lo-ssh-<N> (bridge sin puertos) con la IP 10.253.0.<N>/32 y un comentario
+      con su nombre.
+    • Consultar antes de crear; usar send_config_set() o send_command() solo si hace falta.
+    • Verificar con un comando de lectura después del cambio.
+    • Dos ejecuciones seguidas: la segunda debe mostrar "sin cambios".
+    • Opción --limpiar que elimine solo sus objetos.
+    • Nunca modificar objetos de otros estudiantes.
+
+Extra opcional (hasta +10 puntos, nota máxima 100)
+
+    • REST: obtener el estado del MikroTik también por su API REST (https://10.60.30.202/rest,
+      librería requests) y comparar en el reporte ambos resultados (SSH vs. REST). El profesor
+      facilita un cliente de ejemplo.
+    • Multivendor: agregar el Cisco IOS al inventario (cisco_ios) con sus comandos en el
+      diccionario por device_type.
+
+
+
+4. Trabajo en Clase (Semana 4) — Hoja de Ruta
+
+La sesión de la Semana 4 se dedica completa a iniciar este laboratorio (sin materia nueva).
+
+ Tiempo        Actividad                                  Hito al final
+
+ 0:00 - 0:20   Lectura de requerimientos y dudas          —
+
+ 0:20 - 0:40   Repositorio Git, venv,                     R1 listo, primer commit
+               requirements.txt, inventario.yaml
+
+ 0:40 - 1:20   Ciclo for sobre el inventario + conexión   R2 y R3: conecta al MikroTik y un error (ej. clave
+               + excepciones + logs                       incorrecta) se reporta sin detener el script
+
+ 1:20 - 2:00   Primeros parsers de R4 (empezar por el     reporte_estado.json con al menos un dato por
+               MikroTik)                                  equipo
+
+ Casa (2       Completar R4, R5, R6, README y             Entrega en la Semana 6
+ semanas)      (opcional) el extra
+
+
+  Avance en clase (10 pts de la rúbrica): antes de salir, haga push con R1–R3
+  funcionando. El profesor revisa el repositorio al cierre de la sesión. Quien no asista o no
+  trabaje en la sesión pierde esos 10 puntos (ausencias justificadas: según el reglamento,
+  coordinando con el profesor).
+
+Punto de partida sugerido: laboratorio_1/lab1_plantilla.py (estructura con funciones vacías
+marcadas TODO). Puede usarla o empezar desde cero.
+5. Entrega
+
+Repositorio Git en GitHub (puede ser privado). Obligatorio: agregue al profesor como colaborador
+del repositorio, usuario de GitHub randthat:
+
+   1. En su repo: Settings → Collaborators → Add people.
+   2. Escriba randthat y envíe la invitación.
+   3. Verifique que la invitación aparezca como pendiente o aceptada antes de la fecha de
+      entrega.
+
+ Sin este acceso el profesor no puede recoger la entrega y se considera no entregada. Si
+ usa GitLab, el repositorio debe ser público.
+
+Estructura esperada:
+
+ lab1-<carne>/
+ ├── README.md                  # instalación, variables de entorno y ejecución + declaración de uso de IA
+ ├── requirements.txt           # netmiko, pyyaml (y requests si hace el extra)
+ ├── .gitignore                 # env/, __pycache__/, logs con datos sensibles
+ ├── inventario.yaml            # SIN contraseñas
+ ├── lab1_inventario.py         # script principal
+ ├── reporte_estado.json        # salida de una ejecución real
+ └── logs/                      # session_log de cada equipo
+
+
+En el Campus Virtual: solo el enlace a su repositorio del Lab 1 (ej. https://github.com/
+<usuario>/lab1-<carne>), con randthat ya invitado como colaborador. No se requieren capturas ni
+PDF: el profesor revisa directamente el código, los commits, los logs/ y el reporte_estado.json del
+repositorio.
+
+
+
+6. Rúbrica (100 puntos = 7.5 %)
+
+ Criterio              Excelente                              Aceptable                     Insuficiente         Pts
+
+ Avance en clase       Asistió y al final de la sesión hizo   Asistió con avance            No asistió o no      10
+ (Semana 4)            push con R1–R3 funcionando (10)        parcial: repo + inventario,   trabajó en la
+                                                              sin conexión funcionando      sesión (0)
+                                                              (5)
+
+ R1-R2 Inventario y    YAML externo completo; cero            YAML con detalles             Datos o claves en    10
+ credenciales          credenciales en código o               faltantes (5)                 el código (0)
+                       repositorio (10)
+
+ R3 Conexión y         Conecta al MikroTik; un error de       Conecta, pero un error        No conecta o no      20
+ errores               conexión o autenticación se            detiene el script o faltan    maneja errores (0)
+                       reporta sin detener el script; logs    logs (10)
+                       por equipo (20)
+
+ R4 Estado             Los 4 datos del MikroTik como          Datos parciales o texto       Solo imprime         20
+ estructurado          diccionarios; comandos por             sin procesar (10)             salida cruda (0)
+                       device_type (20)
+
+ R5 Reporte            JSON válido y completo + tabla         JSON incompleto o sin         Sin reporte (0)      10
+                       clara (10)                             tabla (5)
+Criterio            Excelente                           Aceptable                  Insuficiente         Pts
+
+R6 Cambio sin       Crea solo si falta, verifica, 2.ª   Configura, pero duplica,   No configura o       20
+duplicados          ejecución sin cambios, --           no verifica o no limpia    modifica objetos
+                    limpiar; nada ajeno modificado      (10)                       ajenos (0)
+                    (20)
+
+Calidad y           Funciones claras, comentarios       Funcional pero             Sin README o un       5
+documentación       útiles, README reproducible,        desordenado o README       único commit final
+                    commits progresivos (5)             incompleto (3)             (0)
+
+Defensa oral        Explica su código y responde una    Explica parcialmente (3)   No puede explicar     5
+                    modificación en vivo (5)                                       su código (0)
+
+Extra opcional      REST comparado con SSH y/o                                                          +10
+                    Cisco en el inventario
+
+Total                                                                                                   100
+
+
+ Si en la defensa la persona estudiante no puede explicar partes esenciales de su propio
+ código, se ajustarán los criterios correspondientes. Se permite usar asistentes de IA como
+ apoyo, declarándolo en el README (qué se usó y para qué).
+
+
+
+7. Recomendaciones
+
+   • Reutilice lo hecho: conectar_mikrotik_netmiko.py y crear_lan_dhcp_mikrotik_paramiko.py
+     (Semana 3) ya muestran conexión, texto_a_dict() y el patrón consultar-antes-de-actuar.
+   • En RouterOS, print terse produce una línea por registro, más fácil de analizar.
+   • Pruebe el manejo de errores sin tocar el inventario: exporte una clave incorrecta (export
+     LAB_PASS_MT_LAB=mala) o desconecte Tailscale y vuelva a correr el script.
+   • Haga commit después de completar cada requerimiento.
+

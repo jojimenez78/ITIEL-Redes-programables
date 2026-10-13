@@ -1,0 +1,23 @@
+2026-10-13T04:47:53.777Z HYPERVISOR: Release 0.2.25-amd64/Linux (tag 2023010200)
+2026-10-13T04:47:53.777Z HYPERVISOR: Started on IP = 127.0.0.1, TCP port = 56675.
+2026-10-13T04:47:53.780Z HYPERVISOR: exec_cmd: hypervisor version 
+2026-10-13T04:47:53.781Z HYPERVISOR: exec_cmd: hypervisor working_dir /home/josejim74/Documents/ITIEL-Laboratorio#2/Laboratorio#1/project-files/dynamips 
+2026-10-13T04:47:53.781Z GENERAL: working_dir=/home/josejim74/Documents/ITIEL-Laboratorio#2/Laboratorio#1/project-files/dynamips
+2026-10-13T04:47:53.781Z HYPERVISOR: exec_cmd: hypervisor working_dir /home/josejim74/Documents/ITIEL-Laboratorio#2/Laboratorio#1/project-files/dynamips/b2bdeb7d-5803-47f6-a77a-d8abf273f648 
+2026-10-13T04:47:53.781Z GENERAL: working_dir=/home/josejim74/Documents/ITIEL-Laboratorio#2/Laboratorio#1/project-files/dynamips/b2bdeb7d-5803-47f6-a77a-d8abf273f648
+2026-10-13T04:47:53.782Z HYPERVISOR: exec_cmd: vm create R1 1 c3725 
+2026-10-13T04:47:53.782Z VM: VM R1 created.
+2026-10-13T04:47:53.783Z HYPERVISOR: exec_cmd: vm set_con_tcp_port R1 5011 
+2026-10-13T04:47:53.783Z HYPERVISOR: exec_cmd: c3725 get_mac_addr R1 
+2026-10-13T04:47:53.784Z HYPERVISOR: exec_cmd: vm set_disk0 R1 0 
+2026-10-13T04:47:53.785Z HYPERVISOR: exec_cmd: vm get_status R1 
+2026-10-13T04:47:53.785Z HYPERVISOR: exec_cmd: vm set_idle_pc R1 0x60c09aa0 
+2026-10-13T04:47:53.787Z HYPERVISOR: exec_cmd: vm set_ios R1 /home/josejim74/GNS3/images/IOS/c3725-adventerprisek9-mz.124-15.T14.image 
+2026-10-13T04:47:53.788Z HYPERVISOR: exec_cmd: c3725 set_mac_addr R1 c201.58ad.0000 
+2026-10-13T04:47:53.789Z HYPERVISOR: exec_cmd: vm set_nvram R1 256 
+2026-10-13T04:47:54.066Z HYPERVISOR: exec_cmd: nio create_udp udp-6ebe8e16-929f-4d0c-b139-27c502602bef 10004 127.0.0.1 10005 
+2026-10-13T04:47:54.284Z HYPERVISOR: exec_cmd: vm slot_add_nio_binding R1 0 0 udp-6ebe8e16-929f-4d0c-b139-27c502602bef 
+2026-10-13T04:47:54.285Z HYPERVISOR: exec_cmd: vm get_status R1 
+2026-10-13T04:47:54.556Z HYPERVISOR: exec_cmd: nio create_udp udp-d3afec73-0f44-42bd-aafa-7f1576b238bb 10010 127.0.0.1 10011 
+2026-10-13T04:47:54.560Z HYPERVISOR: exec_cmd: vm slot_add_nio_binding R1 0 1 udp-d3afec73-0f44-42bd-aafa-7f1576b238bb 
+2026-10-13T04:47:54.560Z HYPERVISOR: exec_cmd: vm get_status R1 
