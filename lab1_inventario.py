@@ -12,8 +12,7 @@ import time
 import yaml
 from datetime import datetime
 from netmiko import ConnectHandler
-from netmiko.ssh_exception import NetmikoTimeoutException, NetmikoAuthenticationException
-
+from netmiko import ConnectHandler, NetmikoTimeoutException, NetmikoAuthenticationException
 # Diccionario de comandos por device_type (R4)
 COMANDOS = {
     "mikrotik_routeros": {
@@ -79,30 +78,35 @@ def conectar_equipo(equipo):
         return {"estado": "error", "mensaje": error_msg}
 
 def obtener_estado_equipo(equipo):
-    """Obtiene y parsea el estado estructurado de un equipo"""
-    resultado_conexion = conectar_equipo(equipo)
-    
-    # Si hubo un error en la conexión, devolverlo directamente
-    if resultado_conexion.get("estado") == "error":
-        return resultado_conexion
-    
-    # Si la conexión fue exitosa, obtener los comandos y parsearlos
-    conexion = resultado_conexion["conexion"]
-    comandos_equipo = COMANDOS.get(equipo['device_type'], {})
-    estado_parsed = {}
-    
+    """Conecta al equipo, ejecuta los comandos y devuelve el resultado.
+    Todo ocurre dentro del 'with' para que la sesión siga abierta."""
+    password = obtener_contrasena(equipo)
+    dispositivo = {
+        'device_type': equipo['device_type'],
+        'host': equipo['host'],
+        'username': equipo['usuario'],
+        'password': password,
+        'conn_timeout': 10,
+        'session_log': f"logs/session_{equipo['nombre']}.log",
+    }
+    comandos = COMANDOS.get(equipo['device_type'])
+    if not comandos:
+        return {"estado": "error",
+                "mensaje": f"device_type sin comandos: {equipo['device_type']}"}
     try:
-        for clave, comando in comandos_equipo.items():
-            salida = conexion.send_command(comando)
-            estado_parsed[clave] = salida.strip()
-        return {"estado": "ok", "datos": estado_parsed}
+        with ConnectHandler(**dispositivo) as conexion:
+            datos = {}
+            for clave, comando in comandos.items():
+                datos[clave] = conexion.send_command(comando).strip()
+            return {"estado": "ok", "datos": datos}
+    except NetmikoTimeoutException as e:
+        msg = f"Timeout en {equipo['nombre']} ({equipo['host']}): {e}"
+    except NetmikoAuthenticationException as e:
+        msg = f"Autenticación fallida en {equipo['nombre']}: {e}"
     except Exception as e:
-        error_msg = f"Error obteniendo estado de {equipo['nombre']}: {str(e)}"
-        print(error_msg)
-        return {"estado": "error", "mensaje": error_msg}
-    finally:
-        # La conexión se cierra automáticamente al salir del bloque 'with'
-        pass
+        msg = f"Error inesperado en {equipo['nombre']}: {e}"
+    print(msg)
+    return {"estado": "error", "mensaje": msg}
 
 def main():
     parser = argparse.ArgumentParser(description='Script de inventario y configuración para laboratorio GNS3')
