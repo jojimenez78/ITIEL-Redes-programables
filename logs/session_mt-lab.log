@@ -4227,7 +4227,7 @@ Press F1 for help
 
 [lab-ssh@MikroTik] > /interface bridge print terse where name=lo-ssh-7
 
-0 R comment=Lab1 Jose Alonso name=lo-ssh-7 mtu=auto actual-mtu=1500 l2mtu=65535 arp=enabled arp-timeout=auto mac-address=FA:96:2C:FF:1D:7F protocol-mode=rstp fast-forward=yes igmp-snooping=no auto-mac=yes ageing-time=5m priority=0x8000 max-message-age=20s forward-delay=15s transmit-hold-count=6 vlan-filtering=no dhcp-snooping=no ra-guard=no port-cost-mode=long max-learned-entries=auto mlag-peer-port=none mlag-priority=128 mlag-heartbeat=5s
+0 R comment=Lab1 Jose Alonso name=lo-ssh-7 mtu=auto actual-mtu=1500 l2mtu=65535 arp=enabled arp-timeout=auto mac-address=16:67:6C:60:F8:B6 protocol-mode=rstp fast-forward=yes igmp-snooping=no auto-mac=yes ageing-time=5m priority=0x8000 max-message-age=20s forward-delay=15s transmit-hold-count=6 vlan-filtering=no dhcp-snooping=no ra-guard=no port-cost-mode=long max-learned-entries=auto mlag-peer-port=none mlag-priority=128 mlag-heartbeat=5s
 
 
 
@@ -4292,20 +4292,20 @@ Press F1 for help
 
 [lab-ssh@MikroTik] > /system resource print
 
-                   uptime: 16m8s                                     
+                   uptime: 32m45s                                    
                   version: 7.22.1 (stable)                           
                build-time: 2026-03-23 14:35:15                       
          factory-software: 7.1                                       
-              free-memory: 174.5MiB                                  
+              free-memory: 174.2MiB                                  
              total-memory: 384.0MiB                                  
                       cpu: QEMU                                      
                 cpu-count: 1                                         
             cpu-frequency: 2496MHz                                   
-                 cpu-load: 47%                                       
+                 cpu-load: 13%                                       
            free-hdd-space: 69.3MiB                                   
           total-hdd-space: 89.2MiB                                   
-  write-sect-since-reboot: 432                                       
-         write-sect-total: 432                                       
+  write-sect-since-reboot: 712                                       
+         write-sect-total: 712                                       
         architecture-name: x86_64                                    
                board-name: CHR QEMU Standard PC (i440FX + PIIX, 1996)
                  platform: MikroTik                                  
