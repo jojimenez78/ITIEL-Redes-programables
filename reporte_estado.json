@@ -1,0 +1,38 @@
+[
+  {
+    "equipo": "mt-lab",
+    "host": "10.60.30.202",
+    "fecha": "2026-10-18T14:09:46.907534",
+    "estado": "ok",
+    "configuracion": {
+      "interfaz": "lo-ssh-7",
+      "ip": "10.253.0.7/32",
+      "cambios": [
+        "creada interfaz lo-ssh-7",
+        "asignada IP 10.253.0.7/32"
+      ],
+      "verificado": true
+    },
+    "datos": {
+      "nombre": "MikroTik",
+      "uptime": "16m8s",
+      "interfaces": [
+        {
+          "interfaz": "ether1",
+          "ip": "10.60.30.202/24"
+        },
+        {
+          "interfaz": "lo-ssh-7",
+          "ip": "10.253.0.7/32"
+        }
+      ],
+      "gateway_defecto": "10.60.30.1"
+    }
+  },
+  {
+    "equipo": "cisco-lab",
+    "host": "10.60.30.203",
+    "fecha": "2026-10-18T14:09:53.901334",
+    "estado": "error: timeout (TCP connection to device failed.)"
+  }
+]
