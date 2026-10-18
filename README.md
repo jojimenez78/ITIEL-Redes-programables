@@ -1,64 +1,44 @@
-# Laboratorio 1: Inventario, Estado y Configuración Segura con Python + SSH (Netmiko)
-## ITIEL-13 - REDES PROGRAMABLES (Grupo 01)
+# Laboratorio 1: Inventario, Estado y Configuración Segura (Python + SSH con Netmiko)
+ITIEL-13 - Redes Programables (Grupo 01) - TU NOMBRE COMPLETO
 
-### Descripción
-Este laboratorio consiste en crear un script que lea un inventario YAML de equipos GNS3, se conecte por SSH usando Netmiko, recolecte el estado estructurado de los equipos y aplique cambios de configuración idempotentes en el MikroTik.
+## Descripción
+Script que lee un inventario YAML, se conecta por SSH (Netmiko) a un MikroTik RouterOS v7 y a un Cisco IOS 3725, recolecta su estado como datos estructurados (JSON) y asegura en el MikroTik, sin duplicar, la interfaz `lo-ssh-<N>` con la IP `10.253.0.<N>/32`.
 
-### Estructura del proyecto
-```
-lab1-<carne>/
-├── README.md                  # este archivo
-├── requirements.txt           # dependencias
-├── .gitignore                 # archivos excluidos de git
-├── inventario.yaml            # inventario externo de equipos (SIN contraseñas)
-├── lab1_inventario.py         # script principal
-├── reporte_estado.json        # salida de una ejecución real
-└── logs/                      # session_log de cada equipo
-```
+## Entorno de pruebas
+Trabajé con un GNS3 **local** (Fedora Linux) en lugar del servidor del profesor por Tailscale. Usé las mismas IPs, usuario y nombres del enunciado: MikroTik `10.60.30.202` y Cisco `10.60.30.203`, usuario `lab-ssh`. Mi Fedora llega a los routers por una interfaz tap (`10.60.30.1/24`) conectada a un switch en GNS3.
 
-### Instalación
-1. Clonar este repositorio
-2. Crear y activar el entorno virtual:
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # Linux/Mac
-   .\venv\Scripts\activate   # Windows
-   ```
-3. Instalar dependencias:
-   ```bash
-   pip install -r requirements.txt
-   ```
+## Estructura
+- `inventario.yaml`: equipos (sin contraseñas)
+- `lab1_inventario.py`: script principal
+- `reporte_estado.json`: salida de una ejecución real
+- `logs/`: session_log de cada equipo
+- `requirements.txt`: dependencias
 
-### Configuración
-1. Editar `inventario.yaml` con los equipos del laboratorio:
-   - Reemplazar 'estudiante' por su número de lista
-   - Los MikroTik tienen rol `escritura`, Cisco tienen rol `lectura` (opcional)
-2. Configurar variables de entorno para las contraseñas:
-   ```bash
-   export LAB_PASS_MIKROTIK-ESTUDIANTE=su_contraseña_aquí
-   export LAB_PASS_CISCO-ESTUDIANTE=su_contraseña_aquí  # opcional
-   ```
-   Alternativamente, el script solicitará las contraseñas mediante `getpass()` si las variables no existen.
-
-### Ejecución
+## Instalación
 ```bash
-python lab1_inventario.py
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
 ```
+Nota: `requirements.txt` fija `paramiko==3.4.1`. El IOS 3725 solo ofrece el algoritmo `diffie-hellman-group1-sha1`, que las versiones recientes de Paramiko rechazan. pip puede avisar de un conflicto con Netmiko, pero el script funciona.
 
-Para la opción de limpieza:
+## Credenciales
+Se leen de variables de entorno `LAB_PASS_<NOMBRE>` (nombre en mayúsculas, guiones como guion bajo). Si no existen, se piden con `getpass`.
 ```bash
-python lab1_inventario.py --limpiar
+export LAB_PASS_MT_LAB='su_clave'
+export LAB_PASS_CISCO_LAB='su_clave'
 ```
 
-### Variables de entorno
-- `LAB_PASS_<NOMBRE>`: Contraseña para el equipo (nombre en mayúsculas, guiones como _)
-  Ejemplo: para `mikrotik-estudiante` usar `LAB_PASS_MIKROTIK-ESTUDIANTE`
+## Ejecución
+```bash
+python lab1_inventario.py --n 7             # estado + configuración (idempotente)
+python lab1_inventario.py --n 7 --limpiar   # elimina solo lo-ssh-7
+```
+`--n` es el número de lista. La segunda ejecución seguida muestra `sin cambios`.
 
-### Declaración de uso de IA
-Se utilizó OpenCode con el modelo Nemotron 3 Super (NVIDIA) como apoyo para generar el esqueleto del script y que revisé el código yo mismo.
+## Extra
+Multivendor: el Cisco IOS está en el inventario y sus comandos y parser están en los diccionarios `COMANDOS` y `PARSERS`. No hice el extra REST.
 
-### Notas importantes
-- Nunca almacenar contraseñas en el código, inventario.yaml o repositorio
-- El script maneja errores de conexión y continúa con otros equipos si uno falla
-- Los logs de sesión se guardan en el directorio `logs/`
-- El reporte se genera en `reporte_estado.json` y se muestra un resumen en consola
+## Declaración de uso de IA
+- **OpenCode con Nemotron 3 Super (NVIDIA):** generó el esqueleto inicial del script, que luego corregí.
+- **Claude (Anthropic):** me guió en la configuración de GNS3, la red y SSH, depuró errores y escribió y revisó gran parte del código (parsers, R6 y manejo de errores). Revisé y probé el código en mis equipos y puedo explicarlo.
