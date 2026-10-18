@@ -12,7 +12,7 @@ import yaml
 from netmiko import (ConnectHandler, NetmikoTimeoutException,
                      NetmikoAuthenticationException)
 
-NOMBRE_ESTUDIANTE = "Jose Alonso"   # <- cámbialo por tu nombre completo
+NOMBRE_ESTUDIANTE = "Jose Alonso Jimenez Garcia"   # <- cámbialo por tu nombre completo
 
 # R4: comandos por device_type (agregar un fabricante = agregar una entrada)
 COMANDOS = {

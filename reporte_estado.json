@@ -2,7 +2,7 @@
   {
     "equipo": "mt-lab",
     "host": "10.60.30.202",
-    "fecha": "2026-10-18T14:26:23.636498",
+    "fecha": "2026-10-18T14:47:00.726966",
     "estado": "ok",
     "configuracion": {
       "interfaz": "lo-ssh-7",
@@ -15,7 +15,7 @@
     },
     "datos": {
       "nombre": "MikroTik",
-      "uptime": "32m45s",
+      "uptime": "53m22s",
       "interfaces": [
         {
           "interfaz": "ether1",
@@ -32,11 +32,11 @@
   {
     "equipo": "cisco-lab",
     "host": "10.60.30.203",
-    "fecha": "2026-10-18T14:26:27.616433",
+    "fecha": "2026-10-18T14:47:04.695718",
     "estado": "ok",
     "datos": {
       "nombre": "Cisco",
-      "uptime": "14 minutes",
+      "uptime": "34 minutes",
       "interfaces": [
         {
           "interfaz": "FastEthernet0/0",
