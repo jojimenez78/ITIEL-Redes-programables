@@ -31,3 +31,8 @@ dist/
 Thumbs.db
 ehthumbs.desktop
 Desktop.ini
+# GNS3: imágenes y archivos temporales (pesados)
+*.ghost
+*.image
+*.qcow2
+Laboratorio#1/project-files/
