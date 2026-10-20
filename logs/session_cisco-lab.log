@@ -10,13 +10,14 @@ hostname Cisco
 Cisco#
 Cisco#
 Cisco#show version | include uptime
-Cisco uptime is 14 minutes
+Cisco uptime is 9 minutes
 Cisco#
 Cisco#
 Cisco#show ip interface brief
 Interface                  IP-Address      OK? Method Status                Protocol
-FastEthernet0/0            10.60.30.203    YES manual up                    up      
-FastEthernet0/1            unassigned      YES unset  ********istratively down down    
+FastEthernet0/0            10.60.30.203    YES NVRAM  up                    up      
+FastEthernet0/1            unassigned      YES NVRAM  ********istratively down down    
+Cisco#
 Cisco#
 Cisco#show ip route 0.0.0.0
 Routing entry for 0.0.0.0/0, supernet
